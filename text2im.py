@@ -15,6 +15,7 @@ import argparse
 # parse args
 parser = argparse.ArgumentParser()
 parser.add_argument('--prompt', type=str, default='an oil painting of a corgi')
+parser.add_argument('--output_file', type=str, default='out.png')
 
 # Supports both CPU and GPU.
 # On CPU, generating one sample may take on the order of 20 minutes.
@@ -45,14 +46,14 @@ def generate(params: Union[SimpleNamespace, argparse.Namespace]):
     model_up.load_state_dict(load_checkpoint('upsample', device))
     print('total upsampler parameters', sum(x.numel() for x in model_up.parameters()))
 
-    def show_images(batch: th.Tensor):
+    def save_image(batch: th.Tensor):
         """ Save a batch of images inline. """
         scaled = ((batch + 1)*127.5).round().clamp(0,255).to(th.uint8).cpu()
         reshaped = scaled.permute(2, 0, 3, 1).reshape([batch.shape[2], -1, 3])
         # display(Image.fromarray(reshaped.numpy()))
         img = Image.fromarray(reshaped.numpy())
         # save image to file
-        img.save('test.png')
+        img.save(options.output_file)
 
     # Sampling parameters
     prompt = params.prompt
@@ -115,7 +116,7 @@ def generate(params: Union[SimpleNamespace, argparse.Namespace]):
     model.del_cache()
 
     # Show the output
-    show_images(samples)
+    save_image(samples)
     ##############################
     # Upsample the 64x64 samples #
     ##############################
@@ -157,7 +158,7 @@ def generate(params: Union[SimpleNamespace, argparse.Namespace]):
     model_up.del_cache()
 
     # Show the output
-    show_images(up_samples)
+    save_image(up_samples)
 
 if __name__ == '__main__':
     args = parser.parse_args()
