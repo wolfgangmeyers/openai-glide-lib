@@ -12,3 +12,9 @@ Follow instructions in the [glide-text2im](https://github.com/openai/glide-text2
 ```bash
 python text2im.py --prompt="An oil painting of a corgi" --output_file="corgi.png"
 ```
+
+## inpaint
+
+```bash
+python inpaint.py --source_file="src.png" --source_mask_file="mask.png" --output_file="corgi.png" --prompt="A corgi in a field"
+```
