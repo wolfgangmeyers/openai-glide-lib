@@ -53,7 +53,7 @@ def generate(params: Union[SimpleNamespace, argparse.Namespace]):
         # display(Image.fromarray(reshaped.numpy()))
         img = Image.fromarray(reshaped.numpy())
         # save image to file
-        img.save(options.output_file)
+        img.save(params.output_file)
 
     # Sampling parameters
     prompt = params.prompt
